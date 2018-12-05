@@ -1,9 +1,3 @@
-# AirAd
-Beego based RestFul API service
-
-which supports mobile app as cloud service
-![](https://github.com/rubinliudongpo/airad/blob/master/pictures/airad.png)
-
 # clone from https://github.com/rubinliudongpo/airad for study
 
 ## 特性
