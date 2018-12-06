@@ -16,10 +16,23 @@ import (
 func init() {
 	beego.Router("/", &controllers.MainController{})
 	beego.Router("/login", &controllers.UserController{}, "post:Login")
+	// beego.Router("/user", &controllers.UserController{}, "post:Post")
 	ns := beego.NewNamespace("/v1",
-		beego.NSNamespace("/user", beego.NSInclude(&controllers.UserController{},),),
-		beego.NSNamespace("/airad", beego.NSInclude(&controllers.AirAdController{},),),
-		beego.NSNamespace("/device", beego.NSInclude(&controllers.DeviceController{},),),
+		beego.NSNamespace("/user",
+			beego.NSInclude(
+				&controllers.UserController{},
+			),
+		),
+		beego.NSNamespace("/airad",
+			beego.NSInclude(
+				&controllers.AirAdController{},
+			),
+		),
+		beego.NSNamespace("/device",
+			beego.NSInclude(
+				&controllers.DeviceController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 	//beego.InsertFilter("/permission/list", beego.BeforeRouter, filters.HasPermission)

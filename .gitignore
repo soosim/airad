@@ -2,3 +2,6 @@
 routers/commentsRouter*
 airad
 lastupdate.tmp
+.exe*
+tmp/*
+logs/*

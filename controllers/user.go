@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"github.com/rubinliudongpo/airad/models"
-	"github.com/rubinliudongpo/airad/utils"
 	"encoding/json"
 	"errors"
-	"github.com/astaxie/beego"
-	"strings"
-	"strconv"
-	"time"
 	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"github.com/rubinliudongpo/airad/models"
+	"github.com/rubinliudongpo/airad/utils"
+	"strconv"
+	"strings"
+	"time"
 )
 
 // Operations about Users
@@ -36,21 +37,21 @@ func (c *UserController) Post() {
 	var v models.User
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if errorMessage := utils.CheckNewUserPost(v.Username, v.Password,
-			v.Age, v.Gender, v.Address, v.Email); errorMessage != "ok"{
+			v.Age, v.Gender, v.Address, v.Email); errorMessage != "ok" {
 			c.Ctx.ResponseWriter.WriteHeader(403)
-			c.Data["json"] = Response{403, 403,errorMessage, ""}
+			c.Data["json"] = Response{403, 403, errorMessage, ""}
 			c.ServeJSON()
 			return
 		}
-		if models.CheckUserName(v.Username){
+		if models.CheckUserName(v.Username) {
 			c.Ctx.ResponseWriter.WriteHeader(403)
-			c.Data["json"] = Response{403, 403,"用户名称已经注册了", ""}
+			c.Data["json"] = Response{403, 403, "用户名称已经注册了", ""}
 			c.ServeJSON()
 			return
 		}
 		if models.CheckEmail(v.Email) {
 			c.Ctx.ResponseWriter.WriteHeader(403)
-			c.Data["json"] = Response{403, 403,"邮箱已经注册了", ""}
+			c.Data["json"] = Response{403, 403, "邮箱已经注册了", ""}
 			c.ServeJSON()
 			return
 		}
@@ -81,6 +82,7 @@ func (c *UserController) GetAll() {
 	var offset int
 
 	token := c.Ctx.Input.Header("token")
+	logs.Debug("token param:" + token)
 	//id := c.Ctx.Input.Header("id")
 	et := utils.EasyToken{}
 	//token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))
@@ -93,11 +95,11 @@ func (c *UserController) GetAll() {
 	}
 
 	// fields: col1,col2,entity.col3
-	if v := c.GetString("fields"); v != "" {
+	/*if v := c.GetString("fields"); v != "" {
 		fields = strings.Split(v, ",")
 	} else {
 		fields = strings.Split("Username,Gender,Age,Address,Email,Token", ",")
-	}
+	}*/
 	// limit: 10 (default is 10)
 	if v, err := c.GetInt("limit"); err == nil {
 		limit = v
@@ -225,9 +227,9 @@ func (c *UserController) Login() {
 	var token string
 
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &reqData); err == nil {
-		if errorMessage := utils.CheckUsernamePassword(reqData.Username, reqData.Password); errorMessage != "ok"{
+		if errorMessage := utils.CheckUsernamePassword(reqData.Username, reqData.Password); errorMessage != "ok" {
 			c.Ctx.ResponseWriter.WriteHeader(403)
-			c.Data["json"] = Response{403, 403,errorMessage, ""}
+			c.Data["json"] = Response{403, 403, errorMessage, ""}
 			c.ServeJSON()
 			return
 		}
@@ -238,7 +240,7 @@ func (c *UserController) Login() {
 				et = utils.EasyToken{
 					Username: user.Username,
 					Uid:      int64(user.Id),
-					Expires:  time.Now().Unix() + 2 * 3600,
+					Expires:  time.Now().Unix() + 2*3600,
 				}
 				token, err = et.GetToken()
 				if token == "" || err != nil {
@@ -292,4 +294,3 @@ func (u *UserController) Logout() {
 	u.Data["json"] = successReturn
 	u.ServeJSON()
 }
-

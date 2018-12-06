@@ -2,11 +2,10 @@ package models
 
 import (
 	"errors"
-	"github.com/astaxie/beego/orm"
-	"reflect"
-	"strings"
 	"fmt"
+	"github.com/astaxie/beego/orm"
 	"github.com/rubinliudongpo/airad/utils"
+	"strings"
 	"time"
 	//"github.com/astaxie/beego"
 	"github.com/astaxie/beego"
@@ -102,7 +101,7 @@ func GetUserByUserName(username string) (v *User, err error) {
 // GetAllUser retrieves all User matches certain condition. Returns empty list if
 // no records exist
 func GetAllUser(query map[string]string, fields []string, sortby []string, order []string,
-	offset int, limit int) (ml []interface{}, err error) {
+	offset int, limit int) (ml []User, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(User))
 	// query k=v
@@ -159,14 +158,14 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 			}
 		} else {
 			// trim unused fields
-			for _, v := range l {
+			/*for _, v := range l {
 				m := make(map[string]interface{})
 				val := reflect.ValueOf(v)
 				for _, fname := range fields {
 					m[fname] = val.FieldByName(fname).Interface()
 				}
 				ml = append(ml, m)
-			}
+			}*/
 		}
 		return ml, nil
 	}
