@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"airad/models"
+	"airad/utils"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
-	"github.com/rubinliudongpo/airad/models"
-	"github.com/rubinliudongpo/airad/utils"
 	"strconv"
 	"strings"
 	"time"
@@ -83,6 +83,7 @@ func (c *UserController) GetAll() {
 
 	token := c.Ctx.Input.Header("token")
 	logs.Debug("token param:" + token)
+	logs.Debug("logID:" + c.Ctx.Input.GetData("commonLogId").(string))
 	//id := c.Ctx.Input.Header("id")
 	et := utils.EasyToken{}
 	//token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))

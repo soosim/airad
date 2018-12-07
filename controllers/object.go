@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/rubinliudongpo/airad/models"
+	"airad/models"
 	"encoding/json"
 
 	"github.com/astaxie/beego"

@@ -10,7 +10,7 @@ package routers
 import (
 	"github.com/astaxie/beego"
 
-	"github.com/rubinliudongpo/airad/controllers"
+	"airad/controllers"
 )
 
 func init() {

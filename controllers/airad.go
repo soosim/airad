@@ -2,12 +2,12 @@ package controllers
 
 import (
 	//"github.com/astaxie/beego"
-	"github.com/rubinliudongpo/airad/models"
+	"airad/models"
 	"strings"
 	"errors"
 	"encoding/json"
 	"strconv"
-	"github.com/rubinliudongpo/airad/utils"
+	"airad/utils"
 	"fmt"
 )
 

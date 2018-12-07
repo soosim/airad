@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego/orm"
-	"github.com/rubinliudongpo/airad/utils"
+	"airad/utils"
 	"strings"
 	"time"
 	//"github.com/astaxie/beego"

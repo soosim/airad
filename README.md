@@ -1,4 +1,4 @@
-# clone from https://github.com/rubinliudongpo/airad for study
+# clone from https://airad for study
 
 ## 特性
 
@@ -17,7 +17,7 @@
 ## 如何开始
 
 - 安装 [bee](https://github.com/beego/bee) 工具
-- go get github.com/rubinliudongpo/airad （注意配置GOROOT，GOPATH，详情请参考 http://sourabhbajaj.com/mac-setup/Go/README.html ）
+- go get airad （注意配置GOROOT，GOPATH，详情请参考 http://sourabhbajaj.com/mac-setup/Go/README.html ）
 - 在mysql数据库里创建数据库名字叫airad 
 ```
    mysql -uroot -pYOURROOTPASSWORD  -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS airad DEFAULT CHARSET utf8 COLLATE utf8_general_ci;"
@@ -34,7 +34,7 @@
 ## 查看和调试
 
  请通过 http://localhost:9080/swagger/ 试用API，界面如下
-![](https://github.com/rubinliudongpo/airad/blob/master/pictures/airad_swagger.png)
+![](https://airad/blob/master/pictures/airad_swagger.png)
 
 ## 注意
 - SWagger的路由页面待更新

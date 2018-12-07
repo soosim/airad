@@ -2,15 +2,16 @@ package main
 
 
 import (
-	_ "github.com/rubinliudongpo/airad/routers"
-	"github.com/rubinliudongpo/airad/utils"
+	_ "airad/routers"
+	"airad/utils"
 
 
 	"github.com/astaxie/beego"
-	"github.com/rubinliudongpo/airad/controllers"
+	"airad/controllers"
 )
 
 func main() {
+	utils.InitFilter()
 	utils.InitSql()
 	utils.InitTemplate()
 	utils.InitCache()
