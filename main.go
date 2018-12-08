@@ -1,22 +1,21 @@
 package main
 
-
 import (
+	"airad/common/filter"
+	"airad/common/initializ"
+	"airad/module/common"
 	_ "airad/routers"
-	"airad/utils"
-
 
 	"github.com/astaxie/beego"
-	"airad/controllers"
 )
 
 func main() {
-	utils.InitFilter()
-	utils.InitSql()
-	utils.InitTemplate()
-	utils.InitCache()
-	utils.InitBootStrap()
-	beego.ErrorController(&controllers.ErrorController{})
+	filter.InitFilter()
+	initializ.InitSql()
+	// utils.InitTemplate()
+	initializ.InitCache()
+	initializ.InitBootStrap()
+	beego.ErrorController(&common.ErrorController{})
 
 	beego.Run()
 }

@@ -10,31 +10,31 @@ package routers
 import (
 	"github.com/astaxie/beego"
 
-	"airad/controllers"
+	"airad/module/demo/controller"
 )
 
 func init() {
-	beego.Router("/", &controllers.MainController{})
-	beego.Router("/login", &controllers.UserController{}, "post:Login")
+	beego.Router("/", &controller.MainController{})
+	beego.Router("/login", &controller.UserController{}, "post:Login")
 	// beego.Router("/user", &controllers.UserController{}, "post:Post")
 	ns := beego.NewNamespace("/v1",
 		beego.NSNamespace("/user",
 			beego.NSInclude(
-				&controllers.UserController{},
+				&controller.UserController{},
 			),
 		),
 		beego.NSNamespace("/airad",
 			beego.NSInclude(
-				&controllers.AirAdController{},
+				&controller.AirAdController{},
 			),
 		),
 		beego.NSNamespace("/device",
 			beego.NSInclude(
-				&controllers.DeviceController{},
+				&controller.DeviceController{},
 			),
 		),
 	)
 	beego.AddNamespace(ns)
 	//beego.InsertFilter("/permission/list", beego.BeforeRouter, filters.HasPermission)
-	beego.Router("/v1/device/getdevicebyuserid", &controllers.DeviceController{}, "POST:GetDevicesByUserId")
+	beego.Router("/v1/device/getdevicebyuserid", &controller.DeviceController{}, "POST:GetDevicesByUserId")
 }

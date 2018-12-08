@@ -2,6 +2,7 @@
 routers/commentsRouter*
 airad
 lastupdate.tmp
-.exe*
-tmp/*
-logs/*
+*.exe*
+.DS_Store
+public/logs/*
+public/tmp/*
