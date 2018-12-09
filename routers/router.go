@@ -10,31 +10,37 @@ package routers
 import (
 	"github.com/astaxie/beego"
 
-	"airad/module/demo/controller"
+	demoController "airad/module/demo/controller"
+	lifeController "airad/module/life/controller"
 )
 
 func init() {
-	beego.Router("/", &controller.MainController{})
-	beego.Router("/login", &controller.UserController{}, "post:Login")
-	// beego.Router("/user", &controllers.UserController{}, "post:Post")
+	beego.Router("/", &demoController.MainController{})
+	beego.Router("/login", &demoController.UserController{}, "post:Login")
+	// beego.Router("/user", &demoControllers.UserController{}, "post:Post")
 	ns := beego.NewNamespace("/v1",
 		beego.NSNamespace("/user",
 			beego.NSInclude(
-				&controller.UserController{},
+				&demoController.UserController{},
+			),
+		),
+		beego.NSNamespace("/life",
+			beego.NSInclude(
+				&lifeController.SentenceController{},
 			),
 		),
 		beego.NSNamespace("/airad",
 			beego.NSInclude(
-				&controller.AirAdController{},
+				&demoController.AirAdController{},
 			),
 		),
 		beego.NSNamespace("/device",
 			beego.NSInclude(
-				&controller.DeviceController{},
+				&demoController.DeviceController{},
 			),
 		),
 	)
 	beego.AddNamespace(ns)
 	//beego.InsertFilter("/permission/list", beego.BeforeRouter, filters.HasPermission)
-	beego.Router("/v1/device/getdevicebyuserid", &controller.DeviceController{}, "POST:GetDevicesByUserId")
+	beego.Router("/v1/device/getdevicebyuserid", &demoController.DeviceController{}, "POST:GetDevicesByUserId")
 }

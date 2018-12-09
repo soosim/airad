@@ -27,5 +27,6 @@ var loginFilter = func(ctx *context.Context) {
 	if "" == token {
 		// ctx.Redirect(302, "/")
 		ctx.Output.JSON(base.ErrUserToken, false, false)
+		return
 	}
 }
