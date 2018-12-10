@@ -14,7 +14,7 @@ airad.db.name = airad
 airad.db.charset = utf8mb4
 
 life.db.host =
-life.db.port = 3306
+life.db.port =
 life.db.user =
 life.db.password =
 life.db.name =

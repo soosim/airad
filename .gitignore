@@ -6,4 +6,4 @@ lastupdate.tmp
 .DS_Store
 public/logs/*
 public/tmp/*
-app.local
+app.conf
