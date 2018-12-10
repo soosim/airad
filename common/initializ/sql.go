@@ -1,21 +1,19 @@
 package initializ
 
 import (
-	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	"os"
+	"airad/common/support"
 )
 
 func InitSql() {
-	if beego.AppConfig.String("runmode") == "dev" {
+	/*if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
 	}
 	initAiradDB()
-	initLifeDB()
+	initLifeDB()*/
+	support.GetMysqlConnInstance().InitDataPool()
 }
 
-func initAiradDB() {
+/*func initAiradDB() {
 	dbUser := beego.AppConfig.String("airad.db.user")
 	dbPassword := beego.AppConfig.String("airad.db.password")
 	dbHost := beego.AppConfig.String("airad.db.host")
@@ -35,9 +33,9 @@ func initAiradDB() {
 		fmt.Println(err)
 	}*/
 	//orm.RunCommand()
-}
+//}
 
-func initLifeDB() {
+/*func initLifeDB() {
 	dbUser := beego.AppConfig.String("life.db.user")
 	dbPassword := beego.AppConfig.String("life.db.password")
 	dbHost := beego.AppConfig.String("life.db.host")
@@ -51,4 +49,4 @@ func initLifeDB() {
 		fmt.Println("init database life error. the application will be shutdown")
 		os.Exit(1)
 	}
-}
+}*/

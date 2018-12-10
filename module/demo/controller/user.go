@@ -57,13 +57,13 @@ func (c *UserController) Post() {
 			return
 		}
 
-		if user, err := models.AddUser(&v); err == nil {
+		/*if user, err := models.AddUser(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			var returnData = &UserSuccessLoginData{user.Token, user.Username}
 			c.Data["json"] = &base.BaseResponse{0, 0, "ok", returnData}
 		} else {
 			c.Data["json"] = &base.BaseResponse{1, 1, "用户注册失败", err.Error()}
-		}
+		}*/
 	} else {
 		c.Data["json"] = &base.BaseResponse{1, 1, "用户注册失败", err.Error()}
 	}
@@ -133,7 +133,8 @@ func (c *UserController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllUser(query, fields, sortby, order, offset, limit)
+	//l, err := models.GetAllUser(query, fields, sortby, order, offset, limit)
+	l, err := models.GetUserAll(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {

@@ -86,7 +86,8 @@ func CheckDeviceIdAndToken(deviceId int, token string) bool {
 	o := orm.NewOrm()
 	var device Device
 	if err := o.QueryTable(new(Device)).Filter("Id", deviceId).RelatedSel().One(&device); err == nil {
-		exist := Users().Filter("Id", device.UserId).Filter("Token", token).Exist()
+		// exist := Users().Filter("Id", device.UserId).Filter("Token", token).Exist()
+		exist := false
 		return exist
 	}
 	return false
