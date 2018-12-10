@@ -247,7 +247,7 @@ func (c *UserController) Login() {
 				}
 				token, err = et.GetToken()
 				if token == "" || err != nil {
-					c.Data["json"] = base.ErrUserToken
+					c.Data["json"] = base.ErrExpired
 					c.ServeJSON()
 					return
 				} else {

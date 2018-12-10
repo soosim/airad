@@ -37,7 +37,7 @@ func (c *SentenceController) ListSentence() {
 	}
 	sentenceResponseVO, err := service.NewSentenceService().ListSentence(vo)
 	if nil != err {
-		c.Data["json"] = base.ErrDatabase
+		c.Data["json"] = base.ErrServerDatabase
 		c.ServeJSON()
 		return
 	}

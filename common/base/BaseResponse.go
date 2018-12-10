@@ -20,7 +20,7 @@ var (
 	ErrNoUserOrPass = &BaseResponse{400, 10006, "用户不存在或密码不正确", "记录不存在或密码不正确"}
 	ErrNoUserChange = &BaseResponse{400, 10007, "用户不存在或数据未改变", "记录不存在或数据未改变"}
 	ErrInvalidUser  = &BaseResponse{400, 10008, "用户信息不正确", "Session信息不正确"}
-	ErrExpired      = &BaseResponse{400, 10012, "登录已过期", "验证token过期"}
+	ErrExpired      = &BaseResponse{400, 10012, "用户校验失败", "token不存在或已过期"}
 	ErrPermission   = &BaseResponse{400, 10013, "没有权限", "没有操作权限"}
 
 	//服务端错误

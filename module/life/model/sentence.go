@@ -33,11 +33,15 @@ func sentenceQuerySeter() orm.QuerySeter {
 	return o.QueryTable(new(Sentence))
 }
 
+// 构建列表查询器
+func buildListQuerySeter() {
+
+}
+
 // 根据用户ID获取用户
 func GetSentenceById(id int) (v *Sentence, err error) {
-	o := orm.NewOrm()
 	v = &Sentence{Id: id}
-	if err = o.QueryTable(new(Sentence)).Filter("Id", id).RelatedSel().One(v); err == nil {
+	if err = sentenceQuerySeter().Filter("id", id).One(v); err == nil {
 		return v, nil
 	}
 	return nil, err
@@ -46,7 +50,16 @@ func GetSentenceById(id int) (v *Sentence, err error) {
 func ListSentence(vo *vo.ListSentenceVO) ([]*Sentence, error) {
 	var sentences []*Sentence
 	qs := sentenceQuerySeter()
-	qs = qs.Filter("content__icontains", vo.Content)
+	if vo.Content != "" {
+		qs = qs.Filter("content__icontains", vo.Content)
+	}
+	if vo.Author != "" {
+		qs = qs.Filter("author__icontains", vo.Author)
+	}
+	if vo.Country != "" {
+		qs = qs.Filter("country", vo.Country)
+	}
+	qs.OrderBy("-id")
 	num, err := qs.Limit(vo.Size).Offset((vo.Page - 1) * vo.Size).All(&sentences)
 	logs.Debug("Returned Rows Num: %d, %s", num, err)
 	return sentences, err
