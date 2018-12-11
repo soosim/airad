@@ -4,13 +4,13 @@ import (
 	"airad/common/support"
 )
 
-func InitSql() {
+func InitDatabase() {
 	/*if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
 	}
 	initAiradDB()
 	initLifeDB()*/
-	support.GetMysqlConnInstance().InitDataPool()
+	support.GetMysqlConnInstance().InitDataPool("airad")
 }
 
 /*func initAiradDB() {

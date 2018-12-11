@@ -11,7 +11,7 @@ import (
 
 func main() {
 	filter.InitFilter()
-	initializ.InitSql()
+	initializ.InitDatabase()
 	// utils.InitTemplate()
 	initializ.InitCache()
 	initializ.InitBootStrap()

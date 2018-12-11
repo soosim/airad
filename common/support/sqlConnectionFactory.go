@@ -2,6 +2,7 @@ package support
 
 import (
 	"fmt"
+	"github.com/astaxie/beego"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"sync"
@@ -13,7 +14,8 @@ type MysqlConnectionPool struct {
 var instance *MysqlConnectionPool
 var once sync.Once
 
-var db *gorm.DB
+var airadDb *gorm.DB
+var lifeDb *gorm.DB
 var err_db error
 
 func GetMysqlConnInstance() *MysqlConnectionPool {
@@ -23,15 +25,29 @@ func GetMysqlConnInstance() *MysqlConnectionPool {
 	return instance
 }
 
-func (m *MysqlConnectionPool) InitDataPool() (isSuccess bool) {
-	db, err_db = gorm.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/airad?charset=utf8&parseTime=True&loc=Local")
+func (m *MysqlConnectionPool) InitDataPool(database string) (isSuccess bool) {
+	dbUser := beego.AppConfig.String(database + ".db.user")
+	dbPassword := beego.AppConfig.String(database + ".db.password")
+	dbHost := beego.AppConfig.String(database + ".db.host")
+	dbPort := beego.AppConfig.String(database + ".db.port")
+	dbName := beego.AppConfig.String(database + ".db.name")
+	if "airad" == database {
+		airadDb, err_db = gorm.Open("mysql", dbUser+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
+	} else if "airad" == database {
+		lifeDb, err_db = gorm.Open("mysql", dbUser+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
+	}
+
 	if err_db != nil {
-		fmt.Println("init DB error")
+		fmt.Println("init " + database + " DB error")
 		return false
 	}
 	return true
 }
 
-func (m *MysqlConnectionPool) GetMysqlDB() (db_conn *gorm.DB) {
-	return db
+func (m *MysqlConnectionPool) GetAiradDB() (db_conn *gorm.DB) {
+	return airadDb
+}
+
+func (m *MysqlConnectionPool) GetLifeDB() (db_conn *gorm.DB) {
+	return lifeDb
 }

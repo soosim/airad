@@ -17,13 +17,7 @@ type Sentence struct {
 	Time    int64  `json:"time" orm:"column(time);varchar(11)"`
 }
 
-// 注册Model
-func init() {
-	orm.RegisterModel(new(Sentence))
-}
-
 func (u *Sentence) TableName() string {
-	// return TableName("sentence")
 	return "sentence"
 }
 
