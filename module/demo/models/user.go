@@ -4,6 +4,7 @@ import (
 	"airad/common/support"
 	"airad/common/util"
 	"fmt"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -26,14 +27,21 @@ type User struct {
 	Status      int    `json:"status" gorm:"column(status);size(1)"` // 0: enabled, 1:disabled
 	CreatedAt   int64  `json:"created_at" gorm:"column(created_at);size(11)"`
 	UpdatedAt   int64  `json:"updated_at" gorm:"column(updated_at);size(11)"`
-	DeletedAt   int64  `json:"updated_at" gorm:"column(updated_at);size(11)"`
+	DeletedAt   int64  `json:"deleted_at" gorm:"column(deleted_at);size(11)"`
 	DeviceCount int    `json:"device_count" gorm:"column(device_count);size(64);default(0)"`
 	//Device []*Device `orm:"reverse(many)"` // 设置一对多的反向关系
 }
 
+func getDBConn() *gorm.DB {
+	db, err := support.GetMysqlConnInstance().GetDBConn("airad")
+	if err != nil {
+	}
+	return db
+}
+
 // 检测用户是否存在
 func CheckUserId(userId int) bool {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	var user User
 	err := db.First(&user, userId).Error
 	if nil != err && 0 != user.Id {
@@ -44,7 +52,7 @@ func CheckUserId(userId int) bool {
 
 // 检测用户是否存在
 func CheckUserName(username string) bool {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	var user User
 	err := db.Where("username", username).First(&user).Error
 	if nil != err && 0 != user.Id {
@@ -55,7 +63,7 @@ func CheckUserName(username string) bool {
 
 // 检测用户是否存在
 func CheckUserIdAndToken(userId int, token string) bool {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	var user User
 	err := db.Where(&User{Id: userId, Token: token}).First(&user).Error
 	if nil != err && 0 != user.Id {
@@ -66,7 +74,7 @@ func CheckUserIdAndToken(userId int, token string) bool {
 
 // 检测用户是否存在
 func CheckEmail(email string) bool {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	var user User
 	err := db.Where("email", email).First(&user).Error
 	if nil != err && 0 != user.Id {
@@ -86,24 +94,24 @@ func (u *User) CheckPassword(password string) (ok bool, err error) {
 
 // 根据用户ID获取用户
 func GetUserById(id int) (v *User, err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	err = db.First(v, id).Error
 	return v, err
 }
 
 // 根据用户名字获取用户
 func GetUserByUserName(username string) (v *User, err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
-	err = db.Where("username", username).First(v).Error
-	return v, err
+	db := getDBConn()
+	var user = &User{}
+	// 这里不能直接使用 v ,此时v还是 nil,会报nil错误
+	err = db.Where("username = ?", username).First(user).Error
+	return user, err
 }
 
 func GetUserAll(query map[string]string, fields []string, sortby []string, order []string,
 	offset int, limit int) (ml []User, err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
-	db.LogMode(true)
-
-	err = db.Debug().Find(&ml).Error
+	db := getDBConn()
+	err = db.Find(&ml).Error
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -111,7 +119,7 @@ func GetUserAll(query map[string]string, fields []string, sortby []string, order
 }
 
 func GetUserByToken(token string) (bool, User) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	var user User
 	err := db.Where("token", token).First(&user).Error
 	if nil != err && 0 != user.Id {
@@ -121,19 +129,17 @@ func GetUserByToken(token string) (bool, User) {
 }
 
 func Login(username string, password string) (bool, *User) {
-	var user User
-	db := support.GetMysqlConnInstance().GetAiradDB()
-	err := db.Where("username = ? AND password = ?", username, password).First(&user).Error
+	db := getDBConn()
+	user, err := GetUserByUserName(username)
 	if nil != err && 0 != user.Id {
-		return true, &user
+		return true, user
 	}
-	return false, &user
-}
-
-func GetUserByUsername(username string) (err error, user *User) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
-	err = db.Where("username", username).First(&user).Error
-	return err, user
+	passwordHash, err := util.GeneratePassHash(password, user.Salt)
+	err = db.Where("username = ? AND password = ?", username, passwordHash).First(&User{}).Error
+	if nil != err && 0 != user.Id {
+		return false, user
+	}
+	return true, user
 }
 
 // UpdateDevice updates User by DeviceCount and returns error if
@@ -155,7 +161,7 @@ func UpdateUserDeviceCount(m *User) (err error) {
 // updates User's Token and returns error if
 // the record to be updated doesn't exist
 func UpdateUserToken(m *User, token string) (err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	user := User{Id: m.Id}
 	err = db.Table("user").First(&user).Error
 	if err != nil {
@@ -169,8 +175,10 @@ func UpdateUserToken(m *User, token string) (err error) {
 // updates User's LastLogin and returns error if
 // the record to be updated doesn't exist
 func UpdateUserLastLogin(m *User) (err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	m.LastLogin = time.Now().UTC().Unix()
+	// TODO : 应该只更新token和更新时间
+	// todo 学习gorm tag
 	err = db.Save(m).Error
 	return
 }
@@ -178,7 +186,7 @@ func UpdateUserLastLogin(m *User) (err error) {
 // UpdateUser updates User by Id and returns error if
 // the record to be updated doesn't exist
 func UpdateUserById(m *User) (err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	err = db.Update(*m).Error
 	return
 }
@@ -186,7 +194,7 @@ func UpdateUserById(m *User) (err error) {
 // DeleteUser deletes User by Id and returns error if
 // the record to be deleted doesn't exist
 func DeleteUser(id int) (err error) {
-	db := support.GetMysqlConnInstance().GetAiradDB()
+	db := getDBConn()
 	user, err := GetUserById(id)
 	if err == nil {
 		err = db.Delete(user).Error

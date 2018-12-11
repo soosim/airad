@@ -238,6 +238,7 @@ func (c *UserController) Login() {
 			return
 		}
 		if ok, user := models.Login(reqData.Username, reqData.Password); ok {
+			logs.Info(user)
 			et := util.EasyToken{}
 			validation, err := et.ValidateToken(user.Token)
 			if !validation {
@@ -262,6 +263,8 @@ func (c *UserController) Login() {
 			var returnData = &UserSuccessLoginData{token, user.Username}
 			c.Data["json"] = &base.BaseResponse{0, 0, "ok", returnData}
 		} else {
+			logs.Info(ok)
+			logs.Info(user)
 			c.Data["json"] = &base.ErrNoUserOrPass
 		}
 	} else {

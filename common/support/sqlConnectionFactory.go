@@ -14,9 +14,11 @@ type MysqlConnectionPool struct {
 var instance *MysqlConnectionPool
 var once sync.Once
 
-var airadDb *gorm.DB
-var lifeDb *gorm.DB
-var err_db error
+var dbConn = make(map[string]*gorm.DB)
+var IsDebugSql bool
+
+func init() {
+}
 
 func GetMysqlConnInstance() *MysqlConnectionPool {
 	once.Do(func() {
@@ -25,29 +27,38 @@ func GetMysqlConnInstance() *MysqlConnectionPool {
 	return instance
 }
 
-func (m *MysqlConnectionPool) InitDataPool(database string) (isSuccess bool) {
+func (m *MysqlConnectionPool) InitDataPool(database string) (errDb error) {
 	dbUser := beego.AppConfig.String(database + ".db.user")
 	dbPassword := beego.AppConfig.String(database + ".db.password")
 	dbHost := beego.AppConfig.String(database + ".db.host")
 	dbPort := beego.AppConfig.String(database + ".db.port")
 	dbName := beego.AppConfig.String(database + ".db.name")
-	if "airad" == database {
-		airadDb, err_db = gorm.Open("mysql", dbUser+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
-	} else if "airad" == database {
-		lifeDb, err_db = gorm.Open("mysql", dbUser+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
-	}
+	dbCharset := beego.AppConfig.String(database + ".db.charset")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=True&loc=Local",
+		dbUser, dbPassword, dbHost, dbPort, dbName, dbCharset,
+	)
+	dbConn[database], errDb = gorm.Open("mysql", dsn)
+	fmt.Println("init " + database + " Success")
 
-	if err_db != nil {
+	if errDb != nil {
 		fmt.Println("init " + database + " DB error")
-		return false
 	}
-	return true
+	return errDb
 }
 
-func (m *MysqlConnectionPool) GetAiradDB() (db_conn *gorm.DB) {
-	return airadDb
-}
+func (m *MysqlConnectionPool) GetDBConn(database string) (*gorm.DB, error) {
+	var db *gorm.DB
+	var err error
+	if _, ok := dbConn[database]; ok {
+		db = dbConn[database]
+	} else {
+		if err = GetMysqlConnInstance().InitDataPool(database); err == nil {
+			db = dbConn[database]
+		}
+	}
 
-func (m *MysqlConnectionPool) GetLifeDB() (db_conn *gorm.DB) {
-	return lifeDb
+	if IsDebugSql && db != nil {
+		db = db.LogMode(true).Debug()
+	}
+	return db, err
 }

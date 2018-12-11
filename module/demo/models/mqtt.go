@@ -10,19 +10,19 @@ import (
 )
 
 type Mqtt struct {
-	Id           int `json:"id, omitempty" orm:"column(id);pk;unique;auto_increment"`
-	DeviceId     int `json:"user_id" orm:"column(device_id);size(11)"`
-	MqttOptionId int `json:"mqtt_option_id" orm:"column(mqtt_option_id);size(11)"`
+	Id           int `json:"id, omitempty" gorm:"column(id);pk;unique;auto_increment"`
+	DeviceId     int `json:"user_id" gorm:"column(device_id);size(11)"`
+	MqttOptionId int `json:"mqtt_option_id" gorm:"column(mqtt_option_id);size(11)"`
 	// QoS is the QoS of the fixed header.
-	QoS byte `json:"qos, omitempty" orm:"column(qos);varbinary"`
+	QoS byte `json:"qos, omitempty" gorm:"column(qos);varbinary"`
 	// Retain is the Retain of the fixed header.
-	Retain bool `json:"retain, omitempty" orm:"column(retain);varbinary"`
+	Retain bool `json:"retain, omitempty" gorm:"column(retain);varbinary"`
 	// TopicName is the Topic Name of the variable header.
-	TopicName string `json:"topic_name, omitempty" orm:"column(topic_name);varbinary"`
+	TopicName string `json:"topic_name, omitempty" gorm:"column(topic_name);varbinary"`
 	// Message is the Application Message of the payload.
 	//Message []byte
 	// TopicFilter is the Topic Filter of the Subscription.
-	TopicFilter string `json:"topic_filter, omitempty" orm:"column(topic_filter);varbinary"`
+	TopicFilter string `json:"topic_filter, omitempty" gorm:"column(topic_filter);varbinary"`
 }
 
 func init() {

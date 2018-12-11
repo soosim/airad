@@ -22,11 +22,16 @@ func (c *SentenceController) ListSentence() {
 	if err := base.ParseJsonRequestToVO(c.Ctx, vo); err != nil {
 		return
 	}
+	logs.Debug(vo)
+
 	valid := validation.Validation{}
-	if hasError, err := valid.Valid(vo); nil != err || hasError {
+	if ok, err := valid.Valid(vo); nil != err || !ok {
+		logs.Debug("has Error")
 		if nil != err {
 			c.Data["json"] = base.ErrInputData
 		} else {
+			logs.Error(valid.Errors)
+			c.Data["json"] = base.BaseResponse{400, 400, "参数错误", ""}
 			for _, err := range valid.Errors {
 				c.Data["json"] = base.BaseResponse{400, 400, err.Error(), ""}
 				break

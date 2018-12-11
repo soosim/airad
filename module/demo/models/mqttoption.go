@@ -11,29 +11,29 @@ import (
 )
 
 type MqttOption struct {
-	Id int `json:"id, omitempty" orm:"column(id);pk;unique;auto_increment;int(11)"`
+	Id int `json:"id, omitempty" gorm:"column(id);pk;unique;auto_increment;int(11)"`
 	// ClientID is the Client Identifier of the payload.
-	ClientID string `json:"client_id, omitempty" orm:"column(client_id);varbinary"`
+	ClientID string `json:"client_id, omitempty" gorm:"column(client_id);varbinary"`
 	// CONNACKTimeout is timeout in seconds for the Client
 	// to wait for receiving the CONNACK Packet after sending
 	// the CONNECT Packet.
-	ConnAckTimeout time.Duration `json:"conn_ack_timeout, omitempty" orm:"column(conn_ack_timeout);size(64)"`
+	ConnAckTimeout time.Duration `json:"conn_ack_timeout, omitempty" gorm:"column(conn_ack_timeout);size(64)"`
 	// UserName is the User Name of the payload.
-	UserName string `json:"user_name, omitempty" orm:"column(user_name);size(32)"`
+	UserName string `json:"user_name, omitempty" gorm:"column(user_name);size(32)"`
 	// Password is the Password of the payload.
-	Password string `json:"password, omitempty" orm:"column(password);size(128)"`
+	Password string `json:"password, omitempty" gorm:"column(password);size(128)"`
 	// CleanSession is the Clean Session of the variable header.
-	CleanSession bool `json:"clean_session, omitempty" orm:"column(clean_session)"`
+	CleanSession bool `json:"clean_session, omitempty" gorm:"column(clean_session)"`
 	// KeepAlive is the Keep Alive of the variable header.
-	KeepAlive uint16 `json:"keep_alive, omitempty" orm:"column(keep_alive)"`
+	KeepAlive uint16 `json:"keep_alive, omitempty" gorm:"column(keep_alive)"`
 	// WillTopic is the Will Topic of the payload.
-	WillTopic string `json:"will_topic, omitempty" orm:"column(will_topic);varbinary"`
+	WillTopic string `json:"will_topic, omitempty" gorm:"column(will_topic);varbinary"`
 	// WillMessage is the Will Message of the payload.
-	WillMessage string `json:"will_message, omitempty" orm:"column(will_message);varbinary"`
+	WillMessage string `json:"will_message, omitempty" gorm:"column(will_message);varbinary"`
 	// WillQoS is the Will QoS of the variable header.
-	WillQoS bool `json:"will_qos, omitempty" orm:"column(will_qos)"`
+	WillQoS bool `json:"will_qos, omitempty" gorm:"column(will_qos)"`
 	// WillRetain is the Will Retain of the variable header.
-	WillRetain bool `json:"will_retain, omitempty" orm:"column(will_retain)"`
+	WillRetain bool `json:"will_retain, omitempty" gorm:"column(will_retain)"`
 }
 
 func init() {

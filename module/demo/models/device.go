@@ -10,16 +10,16 @@ import (
 )
 
 type Device struct {
-	Id         int    `json:"id, omitempty" orm:"column(id);pk;unique;auto_increment;int(11)"`
-	UserId     int    `json:"user_id" orm:"column(user_id);size(11)"`
-	DeviceName string `json:"device_name" orm:"column(device_name);unique;size(32)"`
-	Address    string `json:"address" orm:"column(address);size(50)"`
-	Status     int    `json:"status" orm:"column(status);size(1)"` // 0: enabled, 1:disabled
-	CreatedAt  int64  `json:"created_at, omitempty" orm:"column(created_at);size(11)"`
-	UpdatedAt  int64  `json:"updated_at, omitempty" orm:"column(updated_at);size(11)"`
-	Latitude   string `json:"latitude, omitempty" orm:"column(latitude);size(12)"`
-	Longitude  string `json:"longitude, omitempty" orm:"column(longitude);size(12)"`
-	AirAdCount int64  `json:"airad_count, omitempty" orm:"column(airad_count);size(64)"`
+	Id         int    `json:"id, omitempty" gorm:"column(id);pk;unique;auto_increment;int(11)"`
+	UserId     int    `json:"user_id" gorm:"column(user_id);size(11)"`
+	DeviceName string `json:"device_name" gorm:"column(device_name);unique;size(32)"`
+	Address    string `json:"address" gorm:"column(address);size(50)"`
+	Status     int    `json:"status" gorm:"column(status);size(1)"` // 0: enabled, 1:disabled
+	CreatedAt  int64  `json:"created_at, omitempty" gorm:"column(created_at);size(11)"`
+	UpdatedAt  int64  `json:"updated_at, omitempty" gorm:"column(updated_at);size(11)"`
+	Latitude   string `json:"latitude, omitempty" gorm:"column(latitude);size(12)"`
+	Longitude  string `json:"longitude, omitempty" gorm:"column(longitude);size(12)"`
+	AirAdCount int64  `json:"airad_count, omitempty" gorm:"column(airad_count);size(64)"`
 	//User *User `json:"user_id" orm:"rel(fk)"`
 	//AirAd []*AirAd `orm:"reverse(many)"` // 设置一对多的反向关系
 }

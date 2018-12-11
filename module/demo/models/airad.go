@@ -10,20 +10,20 @@ import (
 )
 
 type AirAd struct {
-	Id          int    `json:"id, omitempty" orm:"column(id);pk;unique;auto_increment"`
-	DeviceId    int    `json:"device_id" orm:"column(device_id);size(11)"`
-	CreatedAt   int64  `json:"created_at, omitempty" orm:"column(created_at);size(11)"`
-	Nh3         string `json:"nh3, omitempty" orm:"column(nh3);size(4)"`
-	Co          string `json:"co, omitempty" orm:"column(co);size(4)"`
-	O3          string `json:"o3, omitempty" orm:"column(o3);size(4)"`
-	Pm25        string `json:"pm25, omitempty" orm:"column(pm25);size(4)"`
-	Pm10        string `json:"pm10, omitempty" orm:"column(pm10);size(4)"`
-	So2         string `json:"so2, omitempty" orm:"column(so2);size(4)"`
-	Temperature string `json:"temperature, omitempty" orm:"column(temperature);size(4)"`
-	Humidity    string `json:"humidity, omitempty" orm:"column(humidity);size(4)"`
-	AqiQuality  string `json:"aqi_quality, omitempty" orm:"column(aqi_quality);size(4)"`
-	Suggest     string `json:"suggest, omitempty" orm:"column(suggest);size(4)"`
-	//Device *Device `orm:"rel(fk)"`
+	Id          int    `json:"id, omitempty" gorm:"column(id);pk;unique;auto_increment"`
+	DeviceId    int    `json:"device_id" gorm:"column(device_id);size(11)"`
+	CreatedAt   int64  `json:"created_at, omitempty" gorm:"column(created_at);size(11)"`
+	Nh3         string `json:"nh3, omitempty" gorm:"column(nh3);size(4)"`
+	Co          string `json:"co, omitempty" gorm:"column(co);size(4)"`
+	O3          string `json:"o3, omitempty" gorm:"column(o3);size(4)"`
+	Pm25        string `json:"pm25, omitempty" gorm:"column(pm25);size(4)"`
+	Pm10        string `json:"pm10, omitempty" gorm:"column(pm10);size(4)"`
+	So2         string `json:"so2, omitempty" gorm:"column(so2);size(4)"`
+	Temperature string `json:"temperature, omitempty" gorm:"column(temperature);size(4)"`
+	Humidity    string `json:"humidity, omitempty" gorm:"column(humidity);size(4)"`
+	AqiQuality  string `json:"aqi_quality, omitempty" gorm:"column(aqi_quality);size(4)"`
+	Suggest     string `json:"suggest, omitempty" gorm:"column(suggest);size(4)"`
+	//Device *Device `gorm:"rel(fk)"`
 }
 
 func init() {

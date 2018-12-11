@@ -22,7 +22,7 @@ func InitBootStrap() {
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
-		beego.BConfig.WebConfig.StaticDir["/public/swagger"] = "swagger"
+		beego.SetStaticPath("/swagger", "public/swagger")
 		beego.SetLevel(beego.LevelDebug)
 	} else if beego.BConfig.RunMode == "prod" {
 		beego.SetLevel(beego.LevelInformational)

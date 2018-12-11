@@ -17,14 +17,13 @@ func NewSentenceService() *sentenceService {
 
 func (s *sentenceService) ListSentence(vo *vo.ListSentenceVO) (base.BaseListResponseVO, error) {
 	var baseListResponseVO = base.BaseListResponseVO{}
-	sentences, err := model.ListSentence(vo)
+	var err error
+	baseListResponseVO.List, baseListResponseVO.Total, err = model.ListSentence(vo)
 	if nil != err {
 		logs.Error(err)
 		return baseListResponseVO, err
 	}
 	baseListResponseVO.Size = vo.Size
 	baseListResponseVO.Page = vo.Page
-	baseListResponseVO.Total, _ = model.GetSentenceTotal(vo)
-	baseListResponseVO.List = sentences
 	return baseListResponseVO, nil
 }
