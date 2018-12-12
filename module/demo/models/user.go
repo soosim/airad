@@ -143,15 +143,15 @@ func Login(username string, password string) (bool, *User) {
 // the record to be updated doesn't exist
 func UpdateUserDeviceCount(m *User) (err error) {
 	/*o := orm.NewOrm()
-	v := User{Id: m.Id}
-	m.DeviceCount += 1
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
-	}*/
+	  v := User{Id: m.Id}
+	  m.DeviceCount += 1
+	  // ascertain id exists in the database
+	  if err = o.Read(&v); err == nil {
+	      var num int64
+	      if num, err = o.Update(m); err == nil {
+	          fmt.Println("Number of records updated in database:", num)
+	      }
+	  }*/
 	return
 }
 
