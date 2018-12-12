@@ -27,3 +27,7 @@ func (s *sentenceService) ListSentence(vo *vo.ListSentenceVO) (base.BaseListResp
 	baseListResponseVO.Page = vo.Page
 	return baseListResponseVO, nil
 }
+
+func (s *sentenceService) GetOneByRand() (model.Sentence, error) {
+	return model.GetOneByRand()
+}

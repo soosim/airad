@@ -3,6 +3,7 @@ package model
 import (
 	"airad/common/support"
 	"airad/module/life/vo"
+	"github.com/astaxie/beego/logs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -50,4 +51,10 @@ func ListSentence(vo *vo.ListSentenceVO) ([]*Sentence, int64, error) {
 	var num int64
 	err := db.Order("id desc").Offset((vo.Page - 1) * vo.Size).Limit(vo.Size).Find(&sentences).Limit(-1).Count(&num).Error
 	return sentences, num, err
+}
+
+func GetOneByRand() (sentence Sentence, err error) {
+	err = getDBConn().Order("rand()").First(&sentence).Error
+	logs.Info(sentence)
+	return
 }

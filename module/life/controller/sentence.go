@@ -48,3 +48,17 @@ func (c *SentenceController) ListSentence() {
 	}
 	c.Success(sentenceResponseVO)
 }
+
+// @Title GetOneByRand
+// @Description get one Sentence by rand
+// @Success 200 {object} models.Sentence
+// @router /getOneByRand [get]
+func (c *SentenceController) GetOneByRand() {
+	sentence, err := service.NewSentenceService().GetOneByRand()
+	if err == nil {
+		c.Success(sentence)
+		return
+	} else {
+
+	}
+}

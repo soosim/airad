@@ -13,22 +13,22 @@ func (u *User) TableName() string {
 }
 
 type User struct {
-	Id          int    `json:"id" gorm:"column(id);pk;unique;auto_increment;int(11)"`
-	Username    string `json:"username" gorm:"column(username);unique;size(32)"`
-	Password    string `json:"password" gorm:"column(password);size(128)"`
-	Avatar      string `json:"avatar, omitempty" gorm:"column(avatar);varbinary"`
-	Salt        string `json:"salt" gorm:"column(salt);size(128)"`
-	Token       string `json:"token" gorm:"column(token);size(256)"`
-	Gender      int    `json:"gender" gorm:"column(gender);size(1)"` // 0:Male, 1: Female, 2: undefined
-	Age         int    `json:"age" gorm:"column(age):size(3)"`
-	Address     string `json:"address" gorm:"column(address);size(50)"`
-	Email       string `json:"email" gorm:"column(email);size(50)"`
-	LastLogin   int64  `json:"last_login" gorm:"column(last_login);size(11)"`
-	Status      int    `json:"status" gorm:"column(status);size(1)"` // 0: enabled, 1:disabled
-	CreatedAt   int64  `json:"created_at" gorm:"column(created_at);size(11)"`
-	UpdatedAt   int64  `json:"updated_at" gorm:"column(updated_at);size(11)"`
-	DeletedAt   int64  `json:"deleted_at" gorm:"column(deleted_at);size(11)"`
-	DeviceCount int    `json:"device_count" gorm:"column(device_count);size(64);default(0)"`
+	Id          int    `json:"id" gorm:"column:id;pk;unique;auto_increment;int(11)"`
+	Username    string `json:"username" gorm:"column:username;unique;size(32)"`
+	Password    string `json:"password" gorm:"column:password;size(128)"`
+	Avatar      string `json:"avatar, omitempty" gorm:"column:avatar;varbinary"`
+	Salt        string `json:"salt" gorm:"column:salt;size(128)"`
+	Token       string `json:"token" gorm:"column:token;size(256)"`
+	Gender      int    `json:"gender" gorm:"column:gender;size(1)"` // 0:Male, 1: Female, 2: undefined
+	Age         int    `json:"age" gorm:"column:age:size(3)"`
+	Address     string `json:"address" gorm:"column:address;size(50)"`
+	Email       string `json:"email" gorm:"column:email;size(50)"`
+	LastLogin   int64  `json:"last_login" gorm:"column:last_login;type:integer;size(11)"`
+	Status      int    `json:"status" gorm:"column:status;size(1)"` // 0: enabled, 1:disabled
+	CreatedAt   int64  `json:"created_at" gorm:"column:created_at;size(11)"`
+	UpdatedAt   int64  `json:"updated_at" gorm:"column:updated_at;type:integer;size(11)"`
+	DeletedAt   int64  `json:"deleted_at" gorm:"column:deleted_at;type:integer;size(11)"`
+	DeviceCount int    `json:"device_count" gorm:"column:device_count;size(64);default(0)"`
 	//Device []*Device `orm:"reverse(many)"` // 设置一对多的反向关系
 }
 
@@ -108,8 +108,7 @@ func GetUserByUserName(username string) (v *User, err error) {
 	return user, err
 }
 
-func GetUserAll(query map[string]string, fields []string, sortby []string, order []string,
-	offset int, limit int) (ml []User, err error) {
+func GetUserAll() (ml []User, err error) {
 	db := getDBConn()
 	err = db.Find(&ml).Error
 	if err != nil {
@@ -129,15 +128,13 @@ func GetUserByToken(token string) (bool, User) {
 }
 
 func Login(username string, password string) (bool, *User) {
-	db := getDBConn()
 	user, err := GetUserByUserName(username)
 	if nil != err && 0 != user.Id {
 		return true, user
 	}
 	passwordHash, err := util.GeneratePassHash(password, user.Salt)
-	err = db.Where("username = ? AND password = ?", username, passwordHash).First(&User{}).Error
-	if nil != err && 0 != user.Id {
-		return false, user
+	if err != nil || passwordHash != user.Password {
+		return false, nil
 	}
 	return true, user
 }
@@ -161,25 +158,17 @@ func UpdateUserDeviceCount(m *User) (err error) {
 // updates User's Token and returns error if
 // the record to be updated doesn't exist
 func UpdateUserToken(m *User, token string) (err error) {
-	db := getDBConn()
-	user := User{Id: m.Id}
-	err = db.Table("user").First(&user).Error
-	if err != nil {
-		return
-	}
-	user.Token = token
-	err = db.Save(&user).Error
+	//err = getDBConn().Model(m).Update(map[string]interface{}{"token": token, "updated_at": time.Now().UTC().Unix()}).Error
+	err = getDBConn().Model(m).UpdateColumns(User{Token: token, UpdatedAt: time.Now().UTC().Unix()}).Error
 	return
 }
 
 // updates User's LastLogin and returns error if
 // the record to be updated doesn't exist
 func UpdateUserLastLogin(m *User) (err error) {
-	db := getDBConn()
-	m.LastLogin = time.Now().UTC().Unix()
-	// TODO : 应该只更新token和更新时间
 	// todo 学习gorm tag
-	err = db.Save(m).Error
+	// err = getDBConn().Model(m).Update(map[string]interface{}{"last_login": time.Now().UTC().Unix(), "updated_at": time.Now().UTC().Unix()}).Error
+	err = getDBConn().Model(m).UpdateColumns(User{LastLogin: time.Now().UTC().Unix(), UpdatedAt: time.Now().UTC().Unix()}).Error
 	return
 }
 

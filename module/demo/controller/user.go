@@ -5,7 +5,6 @@ import (
 	"airad/common/util"
 	"airad/module/demo/models"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"runtime"
@@ -75,72 +74,25 @@ func (c *UserController) Post() {
 // @Success 200 {object} models.User
 // @router / [get]
 func (c *UserController) GetAll() {
-	var fields []string
-	var sortby []string
-	var order []string
-	var query = make(map[string]string)
-	var limit int = 10
-	var offset int
-
 	token := strings.TrimSpace(c.Ctx.Input.Header("token"))
 	_, file, line, _ := runtime.Caller(0)
 	logs.Debug("[%s.%d] %s", file, line, "token param:"+token)
 	logs.Debug("[%s.%d] %s", file, line, "logID:"+c.Ctx.Input.GetData("commonLogId").(string))
-	//id := c.Ctx.Input.Header("id")
 	et := util.EasyToken{}
-	//token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))
-	validation, err := et.ValidateToken(token)
-	if !validation {
+	ok, err := et.ValidateToken(token)
+	if !ok {
 		c.Ctx.ResponseWriter.WriteHeader(401)
 		c.Data["json"] = base.BaseResponse{401, 401, fmt.Sprintf("%s", err), ""}
 		c.ServeJSON()
 		return
 	}
-
-	// fields: col1,col2,entity.col3
-	/*if v := c.GetString("fields"); v != "" {
-		fields = strings.Split(v, ",")
-	} else {
-		fields = strings.Split("Username,Gender,Age,Address,Email,Token", ",")
-	}*/
-	// limit: 10 (default is 10)
-	if v, err := c.GetInt("limit"); err == nil {
-		limit = v
-	}
-	// offset: 0 (default is 0)
-	if v, err := c.GetInt("offset"); err == nil {
-		offset = v
-	}
-	// sortby: col1,col2
-	if v := c.GetString("sortby"); v != "" {
-		sortby = strings.Split(v, ",")
-	}
-	// order: desc,asc
-	if v := c.GetString("order"); v != "" {
-		order = strings.Split(v, ",")
-	}
-	// query: k:v,k:v
-	if v := c.GetString("query"); v != "" {
-		for _, cond := range strings.Split(v, ",") {
-			kv := strings.SplitN(cond, ":", 2)
-			if len(kv) != 2 {
-				c.Data["json"] = errors.New("Error: invalid query key/value pair")
-				c.ServeJSON()
-				return
-			}
-			k, v := kv[0], kv[1]
-			query[k] = v
-		}
-	}
-
-	//l, err := models.GetAllUser(query, fields, sortby, order, offset, limit)
-	l, err := models.GetUserAll(query, fields, sortby, order, offset, limit)
+	l, err := models.GetUserAll()
 	if err != nil {
-		c.Data["json"] = err.Error()
+		c.Success(err.Error())
 	} else {
-		c.Data["json"] = l
+		c.Success(l)
 	}
-	c.ServeJSON()
+	return
 }
 
 // GetOne ...
@@ -238,7 +190,6 @@ func (c *UserController) Login() {
 			return
 		}
 		if ok, user := models.Login(reqData.Username, reqData.Password); ok {
-			logs.Info(user)
 			et := util.EasyToken{}
 			validation, err := et.ValidateToken(user.Token)
 			if !validation {

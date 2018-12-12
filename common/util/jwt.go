@@ -26,7 +26,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	verifyKey = appConf.String("jwt::token")
+	verifyKey = appConf.String("jwt.token")
 }
 
 func (e EasyToken) GetToken() (string, error) {
