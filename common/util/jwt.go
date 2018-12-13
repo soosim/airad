@@ -7,10 +7,14 @@ import (
 	"log"
 )
 
-type EasyToken struct {
+type easyToken struct {
 	Username string
 	Uid      int64
 	Expires  int64
+}
+
+func NewEasyToken() *easyToken {
+	return &easyToken{}
 }
 
 var (
@@ -29,7 +33,7 @@ func init() {
 	verifyKey = appConf.String("jwt.token")
 }
 
-func (e EasyToken) GetToken() (string, error) {
+func (e easyToken) GetToken() (string, error) {
 	claims := &jwt.StandardClaims{
 		ExpiresAt: e.Expires, //time.Unix(c.ExpiresAt, 0)
 		Issuer:    e.Username,
@@ -42,7 +46,7 @@ func (e EasyToken) GetToken() (string, error) {
 	return tokenString, err
 }
 
-func (e EasyToken) ValidateToken(tokenString string) (bool, error) {
+func (e easyToken) ValidateToken(tokenString string) (bool, error) {
 	if tokenString == "" {
 		return false, errors.New(ErrAbsent)
 	}

@@ -5,11 +5,13 @@ import (
 	"airad/common/initializ"
 	"airad/module/common"
 	_ "airad/routers"
+	"runtime"
 
 	"github.com/astaxie/beego"
 )
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	filter.InitFilter()
 	initializ.InitDatabase()
 	// utils.InitTemplate()

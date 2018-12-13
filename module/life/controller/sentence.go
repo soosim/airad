@@ -31,7 +31,7 @@ func (c *SentenceController) ListSentence() {
 			c.Data["json"] = base.ErrInputData
 		} else {
 			logs.Error(valid.Errors)
-			c.Data["json"] = base.BaseResponse{400, 400, "参数错误", ""}
+			c.Data["json"] = base.ErrInputData
 			for _, err := range valid.Errors {
 				c.Data["json"] = base.BaseResponse{400, 400, err.Error(), ""}
 				break
@@ -61,4 +61,25 @@ func (c *SentenceController) GetOneByRand() {
 	} else {
 
 	}
+}
+
+// @Title GetOneByRand
+// @Description get one Sentence by rand
+// @Success 200 {object} models.Sentence
+// @router /create [post]
+func (c *SentenceController) Create() {
+	logs.Debug("接收到的数据为:" + string(c.Ctx.Input.RequestBody))
+	vo := sentenceVo.NewSaveSentenceVO()
+	if err := base.ParseJsonRequestToVO(c.Ctx, vo); err != nil {
+		return
+	}
+	logs.Debug(vo)
+	if vo.Id != 0 {
+		c.Data["json"] = base.ErrInputData
+	}
+	sentence, err := service.NewSentenceService().Create(vo)
+	if err == nil {
+		c.Success(sentence)
+	}
+	logs.Error(err)
 }

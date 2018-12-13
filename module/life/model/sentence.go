@@ -5,6 +5,7 @@ import (
 	"airad/module/life/vo"
 	"github.com/astaxie/beego/logs"
 	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type Sentence struct {
@@ -16,6 +17,10 @@ type Sentence struct {
 	Country string `json:"country" gorm:"column(country);varchar(20)"`
 	Others  string `json:"others" gorm:"column(others);varchar(1000)"`
 	Time    int64  `json:"time" gorm:"column(time);int(11)"`
+}
+
+func NewSentence() *Sentence {
+	return &Sentence{}
 }
 
 func (u *Sentence) TableName() string {
@@ -57,4 +62,12 @@ func GetOneByRand() (sentence Sentence, err error) {
 	err = getDBConn().Order("rand()").First(&sentence).Error
 	logs.Info(sentence)
 	return
+}
+
+func Create(sentence Sentence) (Sentence, error) {
+	db := getDBConn()
+	sentence.Time = time.Now().UTC().Unix()
+	db.NewRecord(sentence)
+	err := db.Create(&sentence).Error
+	return sentence, err
 }

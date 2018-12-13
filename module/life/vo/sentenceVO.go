@@ -28,3 +28,18 @@ func (vo *ListSentenceVO) Valid(v *validation.Validation) {
 		v.SetError("Page或Size", "Page或Size过大")
 	}
 }
+
+type SaveSentenceVO struct {
+	Id      int    `json:"id"`
+	Content string `json:"content"`
+	Article string `json:"article"`
+	Role    string `json:"role"`
+	Author  string `json:"author"`
+	Country string `json:"country"`
+	Others  string `json:"others"`
+	Time    int64  `json:"time"`
+}
+
+func NewSaveSentenceVO() *SaveSentenceVO {
+	return &SaveSentenceVO{}
+}

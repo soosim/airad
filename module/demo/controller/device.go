@@ -36,7 +36,7 @@ func (c *DeviceController) Post() {
 	var v models.Device
 	token := c.Ctx.Input.Header("token")
 	//id := c.Ctx.Input.Header("id")
-	et := util.EasyToken{}
+	et := util.NewEasyToken()
 	//token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))
 	validation, err := et.ValidateToken(token)
 	if !validation {
@@ -142,7 +142,7 @@ func (c *DeviceController) GetAll() {
 
 	token := c.Ctx.Input.Header("token")
 	//id := c.Ctx.Input.Header("id")
-	et := util.EasyToken{}
+	et := util.NewEasyToken()
 	//token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))
 	valido, err := et.ValidateToken(token)
 	if !valido {

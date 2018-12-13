@@ -2,6 +2,7 @@ package service
 
 import (
 	"airad/common/base"
+	"airad/common/helper"
 	"airad/module/life/model"
 	"airad/module/life/vo"
 	"github.com/astaxie/beego/logs"
@@ -30,4 +31,19 @@ func (s *sentenceService) ListSentence(vo *vo.ListSentenceVO) (base.BaseListResp
 
 func (s *sentenceService) GetOneByRand() (model.Sentence, error) {
 	return model.GetOneByRand()
+}
+
+func (s *sentenceService) Create(vo *vo.SaveSentenceVO) (model.Sentence, error) {
+	sentence := &model.Sentence{}
+	if err := helper.Copy(sentence, *vo); err != nil {
+		logs.Error("copy from vo to sentence error")
+		logs.Error(err)
+		return model.Sentence{}, err
+	}
+	sentenceModel, err := model.Create(*sentence)
+	if err == nil {
+		return sentenceModel, nil
+	}
+	logs.Error("保存失败")
+	return model.Sentence{}, err
 }

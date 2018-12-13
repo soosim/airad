@@ -57,12 +57,12 @@ func (c *UserController) Post() {
 		}
 
 		/*if user, err := models.AddUser(&v); err == nil {
-			c.Ctx.Output.SetStatus(201)
-			var returnData = &UserSuccessLoginData{user.Token, user.Username}
-			c.Data["json"] = &base.BaseResponse{0, 0, "ok", returnData}
-		} else {
-			c.Data["json"] = &base.BaseResponse{1, 1, "用户注册失败", err.Error()}
-		}*/
+		      c.Ctx.Output.SetStatus(201)
+		      var returnData = &UserSuccessLoginData{user.Token, user.Username}
+		      c.Data["json"] = &base.BaseResponse{0, 0, "ok", returnData}
+		  } else {
+		      c.Data["json"] = &base.BaseResponse{1, 1, "用户注册失败", err.Error()}
+		  }*/
 	} else {
 		c.Data["json"] = &base.BaseResponse{1, 1, "用户注册失败", err.Error()}
 	}
@@ -78,7 +78,7 @@ func (c *UserController) GetAll() {
 	_, file, line, _ := runtime.Caller(0)
 	logs.Debug("[%s.%d] %s", file, line, "token param:"+token)
 	logs.Debug("[%s.%d] %s", file, line, "logID:"+c.Ctx.Input.GetData("commonLogId").(string))
-	et := util.EasyToken{}
+	et := util.NewEasyToken()
 	ok, err := et.ValidateToken(token)
 	if !ok {
 		c.Ctx.ResponseWriter.WriteHeader(401)
@@ -107,7 +107,7 @@ func (c *UserController) GetOne() {
 	//idStr := c.Ctx.Input.Param("id")
 	idStr := c.Ctx.Input.Param(":id")
 	//token := c.Ctx.Input.Param(":token")
-	et := util.EasyToken{}
+	et := util.NewEasyToken()
 	//token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))
 	valido, err := et.ValidateToken(token)
 	if !valido {
@@ -190,14 +190,12 @@ func (c *UserController) Login() {
 			return
 		}
 		if ok, user := models.Login(reqData.Username, reqData.Password); ok {
-			et := util.EasyToken{}
+			et := util.NewEasyToken()
 			validation, err := et.ValidateToken(user.Token)
 			if !validation {
-				et = util.EasyToken{
-					Username: user.Username,
-					Uid:      int64(user.Id),
-					Expires:  time.Now().Unix() + 2*3600,
-				}
+				et.Username = user.Username
+				et.Uid = int64(user.Id)
+				et.Expires = time.Now().Unix() + 2*3600
 				token, err = et.GetToken()
 				if token == "" || err != nil {
 					c.Data["json"] = base.ErrExpired
@@ -230,7 +228,7 @@ func (c *UserController) Login() {
 // @Failure 401 unauthorized
 // @router /auth [get]
 func (c *UserController) Auth() {
-	et := util.EasyToken{}
+	et := util.NewEasyToken()
 	token := strings.TrimSpace(c.Ctx.Request.Header.Get("Authorization"))
 	validation, err := et.ValidateToken(token)
 	if !validation {
