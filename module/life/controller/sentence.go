@@ -2,6 +2,7 @@ package controller
 
 import (
 	"airad/common/base"
+	"airad/common/support"
 	"airad/module/life/service"
 	sentenceVo "airad/module/life/vo"
 	"github.com/astaxie/beego/logs"
@@ -12,9 +13,16 @@ type SentenceController struct {
 	base.BaseController
 }
 
-// @Title GetAll
+// URLMapping ...
+func (c *SentenceController) URLMapping() {
+	c.Mapping("ListSentence", c.ListSentence)
+	c.Mapping("GetOneByRand", c.GetOneByRand)
+	c.Mapping("Create", c.Create)
+}
+
+// @Title ListSentence
 // @Description get all Sentence
-// @Success 200 {object} models.Sentence
+// @Success 200 {object} base.BaseListResponseVO
 // @router /list [post]
 func (c *SentenceController) ListSentence() {
 	logs.Debug("接收到的数据为:" + string(c.Ctx.Input.RequestBody))
@@ -55,16 +63,27 @@ func (c *SentenceController) ListSentence() {
 // @router /getOneByRand [get]
 func (c *SentenceController) GetOneByRand() {
 	sentence, err := service.NewSentenceService().GetOneByRand()
+	redis := support.GetRedisClient()
+	// redis.Set("xiejinlong", "test", 0)
+	// redis.Ping()
+	redisGet := redis.Get("xiejinlong")
+	logs.Info(redisGet)
+	res, err := redisGet.Result()
+	if err != nil {
+		logs.Error(err)
+	}
+	c.Success(res)
+	return
 	if err == nil {
 		c.Success(sentence)
 		return
 	} else {
-
+		logs.Error("get sentence error :", err)
 	}
 }
 
-// @Title GetOneByRand
-// @Description get one Sentence by rand
+// @Title Create
+// @Description create sentence
 // @Success 200 {object} models.Sentence
 // @router /create [post]
 func (c *SentenceController) Create() {

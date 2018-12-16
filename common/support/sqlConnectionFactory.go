@@ -38,6 +38,8 @@ func (m *MysqlConnectionPool) InitDataPool(database string) (errDb error) {
 		dbUser, dbPassword, dbHost, dbPort, dbName, dbCharset,
 	)
 	dbConn[database], errDb = gorm.Open("mysql", dsn)
+	dbConn[database].DB().SetMaxIdleConns(10)
+	dbConn[database].DB().SetMaxOpenConns(100)
 	fmt.Println("init " + database + " Success")
 
 	if errDb != nil {
@@ -51,6 +53,7 @@ func (m *MysqlConnectionPool) GetDBConn(database string) (*gorm.DB, error) {
 	var err error
 	if _, ok := dbConn[database]; ok {
 		db = dbConn[database]
+		db.DB().Ping()
 	} else {
 		if err = GetMysqlConnInstance().InitDataPool(database); err == nil {
 			db = dbConn[database]

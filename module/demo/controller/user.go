@@ -224,7 +224,7 @@ func (c *UserController) Login() {
 
 // @Title 认证测试
 // @Description 测试错误码
-// @Success 200 {object}
+// @Success 200 {object} base.BaseResponse
 // @Failure 401 unauthorized
 // @router /auth [get]
 func (c *UserController) Auth() {
