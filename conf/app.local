@@ -7,20 +7,20 @@ EnableDocs = true
 Graceful = true
 
 [db-airad]
-airad.db.host = 127.0.0.1
-airad.db.port = 3306
-airad.db.user = root
-airad.db.password = 123456
-airad.db.name = airad
-airad.db.charset = utf8mb4
+db.host = 127.0.0.1
+db.port = 3306
+db.user = root
+db.password = 123456
+db.name = airad
+db.charset = utf8mb4
 
 [db-life]
-life.db.host =
-life.db.port =
-life.db.user =
-life.db.password =
-life.db.name =
-life.db.charset = utf8
+db.host =
+db.port =
+db.user =
+db.password =
+db.name =
+db.charset = utf8
 
 [session]
 sessionon = true
