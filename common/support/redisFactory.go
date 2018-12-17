@@ -1,22 +1,37 @@
 package support
 
 import (
-    "github.com/astaxie/beego"
-    "github.com/go-redis/redis"
-    "sync"
+	"errors"
+	"github.com/astaxie/beego"
+	"github.com/go-redis/redis"
+	"sync"
 )
 
 var redisClient *redis.Client
 var onceRedis sync.Once
 
-func InitRedisClient() {
-    redisClient = redis.NewClient(&redis.Options{
-        Addr:     beego.AppConfig.String("redis.host"),
-        Password: beego.AppConfig.String("redis.password"),
-        DB:       0, // use default DB
-    })
+func InitRedisClient() error {
+	redisHost := beego.AppConfig.String("cache::redis.host")
+	if "" == redisHost {
+		panic("redisHost config error")
+	}
+	redisPass := beego.AppConfig.String("cache::redis.password")
+
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:         redisHost,
+		Password:     redisPass,
+		DB:           0, // use default DB
+		MinIdleConns: 1,
+		PoolSize:     5,
+	})
+
+	poolStats := redisClient.PoolStats()
+	if 0 == poolStats.TotalConns {
+		return errors.New("pool TotalConns is zero")
+	}
+	return nil
 }
 
 func GetRedisClient() *redis.Client {
-    return redisClient
+	return redisClient
 }

@@ -5,34 +5,52 @@ import (
 	"airad/common/support"
 	"airad/module/life/service"
 	sentenceVo "airad/module/life/vo"
+	"fmt"
 	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego/validation"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 type SentenceController struct {
 	base.BaseController
 }
 
-// URLMapping ...
-func (c *SentenceController) URLMapping() {
-	c.Mapping("ListSentence", c.ListSentence)
-	c.Mapping("GetOneByRand", c.GetOneByRand)
-	c.Mapping("Create", c.Create)
-}
+// use a single instance of Validate, it caches struct info
+var validate *validator.Validate
 
 // @Title ListSentence
 // @Description get all Sentence
 // @Success 200 {object} base.BaseListResponseVO
 // @router /list [post]
 func (c *SentenceController) ListSentence() {
-	logs.Debug("接收到的数据为:" + string(c.Ctx.Input.RequestBody))
+	logs.Info("接收到的数据为:" + string(c.Ctx.Input.RequestBody))
 	vo := sentenceVo.NewListSentenceVO()
 	if err := base.ParseJsonRequestToVO(c.Ctx, vo); err != nil {
 		return
 	}
 	logs.Debug(vo)
+	err := validator.New().Struct(vo)
+	if err != nil {
+		if _, ok := err.(*validator.InvalidValidationError); ok {
+			fmt.Println(err)
+			return
+		}
 
-	valid := validation.Validation{}
+		for _, err := range err.(validator.ValidationErrors) {
+			fmt.Println(err.Namespace())
+			fmt.Println(err.Field())
+			fmt.Println(err.StructNamespace()) // can differ when a custom TagNameFunc is registered or
+			fmt.Println(err.StructField())     // by passing alt name to ReportError like below
+			fmt.Println(err.Tag())
+			fmt.Println(err.ActualTag())
+			fmt.Println(err.Kind())
+			fmt.Println(err.Type())
+			fmt.Println(err.Value())
+			fmt.Println(err.Param())
+			fmt.Println()
+		}
+	}
+
+	/*valid := validation.Validation{}
 	if ok, err := valid.Valid(vo); nil != err || !ok {
 		logs.Debug("has Error")
 		if nil != err {
@@ -47,7 +65,7 @@ func (c *SentenceController) ListSentence() {
 		}
 		c.ServeJSON()
 		return
-	}
+	}*/
 	sentenceResponseVO, err := service.NewSentenceService().ListSentence(vo)
 	if nil != err {
 		c.Data["json"] = base.ErrServerDatabase
@@ -67,7 +85,6 @@ func (c *SentenceController) GetOneByRand() {
 	// redis.Set("xiejinlong", "test", 0)
 	// redis.Ping()
 	redisGet := redis.Get("xiejinlong")
-	logs.Info(redisGet)
 	res, err := redisGet.Result()
 	if err != nil {
 		logs.Error(err)

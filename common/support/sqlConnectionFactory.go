@@ -28,23 +28,19 @@ func GetMysqlConnInstance() *MysqlConnectionPool {
 }
 
 func (m *MysqlConnectionPool) InitDataPool(database string) (errDb error) {
-	dbUser := beego.AppConfig.String(database + ".db.user")
-	dbPassword := beego.AppConfig.String(database + ".db.password")
-	dbHost := beego.AppConfig.String(database + ".db.host")
-	dbPort := beego.AppConfig.String(database + ".db.port")
-	dbName := beego.AppConfig.String(database + ".db.name")
-	dbCharset := beego.AppConfig.String(database + ".db.charset")
+	dbUser := beego.AppConfig.String("db-" + database + "::db.user")
+	dbPassword := beego.AppConfig.String("db-" + database + "::db.password")
+	dbHost := beego.AppConfig.String("db-" + database + "::db.host")
+	dbPort := beego.AppConfig.String("db-" + database + "::db.port")
+	dbName := beego.AppConfig.String("db-" + database + "::db.name")
+	dbCharset := beego.AppConfig.String("db-" + database + "::db.charset")
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=True&loc=Local",
 		dbUser, dbPassword, dbHost, dbPort, dbName, dbCharset,
 	)
 	dbConn[database], errDb = gorm.Open("mysql", dsn)
 	dbConn[database].DB().SetMaxIdleConns(10)
 	dbConn[database].DB().SetMaxOpenConns(100)
-	fmt.Println("init " + database + " Success")
 
-	if errDb != nil {
-		fmt.Println("init " + database + " DB error")
-	}
 	return errDb
 }
 

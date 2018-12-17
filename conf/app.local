@@ -6,6 +6,7 @@ copyrequestbody = true
 EnableDocs = true
 Graceful = true
 
+[db-user]
 airad.db.host = 127.0.0.1
 airad.db.port = 3306
 airad.db.user = root
@@ -13,6 +14,7 @@ airad.db.password = 123456
 airad.db.name = airad
 airad.db.charset = utf8mb4
 
+[db-life]
 life.db.host =
 life.db.port =
 life.db.user =
@@ -20,12 +22,14 @@ life.db.password =
 life.db.name =
 life.db.charset = utf8
 
+[session]
 sessionon = true
 sessionprovider = file
 sessionproviderconfig = "./public/tmp"
 sessiongcmaxlifetime = 31536000
 sessioncookielifetime = 31536000
 
+[cache]
 cache = redis
 redis.host = "127.0.0.1:6379"
 redis.password = ""

@@ -17,8 +17,6 @@ func InitBootStrap() {
 		go handleSignals(sigs)
 	}
 	beego.SetLogger(logs.AdapterFile, `{"filename":"public/logs/logs.log","level":7,"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,"color":true}`)
-	// beego.SetLogger(logs.AdapterFile, `{"filename":"logs/logs.log"}`)
-	// logs.EnableFuncCallDepth(true)
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
@@ -38,7 +36,6 @@ func handleSignals(c chan os.Signal) {
 		fmt.Println("Shutdown quickly, bye...")
 	case syscall.SIGQUIT:
 		fmt.Println("Shutdown gracefully, bye...")
-		// do graceful shutdown
 	}
 	os.Exit(0)
 }

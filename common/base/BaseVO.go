@@ -14,8 +14,8 @@ type BaseVO struct {
 
 type BaseListRequestVO struct {
 	BaseVO
-	Page int `valid:"Range(1, 1000)"`
-	Size int `valid:"Range(1, 50)"`
+	Page int `validate:"required,max=1000,min=1"`
+	Size int `validate:"required,max=1000,min=1"`
 }
 
 type BaseListResponseVO struct {
