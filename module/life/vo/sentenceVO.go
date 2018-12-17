@@ -6,11 +6,11 @@ import (
 
 type ListSentenceVO struct {
 	base.BaseListRequestVO
-	Content string `validate:"required"`
-	Article string
-	Role    string
-	Author  string
-	Country string
+	Content string `validate:"omitempty,min=1,max=30"`
+	Article string `validate:"omitempty,min=1,max=20"`
+	Role    string `validate:"omitempty,min=1,max=20"`
+	Author  string `validate:"omitempty,min=1,max=20"`
+	Country string `validate:"omitempty,min=1,max=20"`
 	Others  string
 	Time    int64
 }

@@ -5,9 +5,7 @@ import (
 	"airad/common/support"
 	"airad/module/life/service"
 	sentenceVo "airad/module/life/vo"
-	"fmt"
 	"github.com/astaxie/beego/logs"
-	"gopkg.in/go-playground/validator.v9"
 )
 
 type SentenceController struct {
@@ -15,7 +13,7 @@ type SentenceController struct {
 }
 
 // use a single instance of Validate, it caches struct info
-var validate *validator.Validate
+// var validate *validator.Validate
 
 // @Title ListSentence
 // @Description get all Sentence
@@ -28,28 +26,10 @@ func (c *SentenceController) ListSentence() {
 		return
 	}
 	logs.Debug(vo)
-	err := validator.New().Struct(vo)
-	if err != nil {
-		if _, ok := err.(*validator.InvalidValidationError); ok {
-			fmt.Println(err)
-			return
-		}
-
-		for _, err := range err.(validator.ValidationErrors) {
-			fmt.Println(err.Namespace())
-			fmt.Println(err.Field())
-			fmt.Println(err.StructNamespace()) // can differ when a custom TagNameFunc is registered or
-			fmt.Println(err.StructField())     // by passing alt name to ReportError like below
-			fmt.Println(err.Tag())
-			fmt.Println(err.ActualTag())
-			fmt.Println(err.Kind())
-			fmt.Println(err.Type())
-			fmt.Println(err.Value())
-			fmt.Println(err.Param())
-			fmt.Println()
-		}
+	// err := validator.New().Struct(vo)
+	if err := c.ValidInputData(vo); err != nil {
+		return
 	}
-
 	/*valid := validation.Validation{}
 	if ok, err := valid.Valid(vo); nil != err || !ok {
 		logs.Debug("has Error")

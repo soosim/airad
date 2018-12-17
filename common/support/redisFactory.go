@@ -26,8 +26,8 @@ func InitRedisClient() error {
 	})
 
 	poolStats := redisClient.PoolStats()
-	if 0 == poolStats.TotalConns {
-		return errors.New("pool TotalConns is zero")
+	if 0 == poolStats.IdleConns {
+		return errors.New("pool IdleConns is zero")
 	}
 	return nil
 }

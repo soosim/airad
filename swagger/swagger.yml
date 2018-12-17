@@ -445,10 +445,10 @@ paths:
         "200":
           description: '{string} logout success'
 definitions:
-  787.0xc0000a9140.false:
+  2188.0xc000320180.false:
     title: "false"
     type: object
-  2826.0xc0000a9440.false:
+  4251.0xc000320480.false:
     title: "false"
     type: object
   String:
@@ -459,7 +459,7 @@ definitions:
     type: object
     properties:
       list:
-        $ref: '#/definitions/2826.0xc0000a9440.false'
+        $ref: '#/definitions/4251.0xc000320480.false'
       page:
         type: integer
         format: int64
@@ -474,7 +474,7 @@ definitions:
     type: object
     properties:
       data:
-        $ref: '#/definitions/787.0xc0000a9140.false'
+        $ref: '#/definitions/2188.0xc000320180.false'
       err_code:
         type: integer
         format: int64

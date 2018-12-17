@@ -6,7 +6,7 @@ copyrequestbody = true
 EnableDocs = true
 Graceful = true
 
-[db-user]
+[db-airad]
 airad.db.host = 127.0.0.1
 airad.db.port = 3306
 airad.db.user = root
