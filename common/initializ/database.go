@@ -8,7 +8,7 @@ import (
 )
 
 func InitDatabase() {
-	if beego.AppConfig.String("runmode") == "dev" {
+	if beego.BConfig.RunMode == "dev" {
 		support.IsDebugSql = true
 	}
 	var err error

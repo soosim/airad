@@ -15,10 +15,7 @@ type BaseController struct {
 
 func (base *BaseController) Prepare() {
 	controllerName, actionName := base.GetControllerAndAction()
-	logs.Info("calling :"+controllerName, "/", actionName)
-}
-
-func (base *BaseController) URLMapping() {
+	logs.Debug("calling :"+controllerName, "/", actionName)
 }
 
 func (base *BaseController) Success(data interface{}) {
@@ -29,13 +26,10 @@ func (base *BaseController) Success(data interface{}) {
 
 // RetError return error information in JSON.
 func (base *BaseController) RetError(e *BaseResponse) {
-	if mode := beego.AppConfig.String("runmode"); mode == "prod" {
-		e.Data = ""
-	}
-
 	base.Ctx.ResponseWriter.WriteHeader(e.Status)
-	base.Data["json"] = e
-	base.ServeJSON()
+	// base.Data["json"] = e
+	base.Ctx.Output.JSON(e, true, false)
+	// base.ServeJSON()
 }
 
 // use a single instance of Validate, it caches struct info
@@ -55,16 +49,18 @@ func (base *BaseController) ValidInputData(vo interface{}) error {
 		errRes.ErrMsg += ":"
 		for _, err := range err.(validator.ValidationErrors) {
 			errRes.ErrMsg += err.Field() + " " + err.ActualTag() + " " + err.Param() + ","
-			fmt.Println(err.Namespace())
-			fmt.Println(err.Field())
-			fmt.Println(err.StructNamespace()) // can differ when a custom TagNameFunc is registered or
-			fmt.Println(err.StructField())     // by passing alt name to ReportError like below
-			fmt.Println(err.Tag())
-			fmt.Println(err.ActualTag())
-			fmt.Println(err.Kind())
-			fmt.Println(err.Type())
-			fmt.Println(err.Value())
-			fmt.Println(err.Param())
+			if beego.BConfig.RunMode == "dev" {
+				fmt.Println(err.Namespace())
+				fmt.Println(err.Field())
+				fmt.Println(err.StructNamespace()) // can differ when a custom TagNameFunc is registered or
+				fmt.Println(err.StructField())     // by passing alt name to ReportError like below
+				fmt.Println(err.Tag())
+				fmt.Println(err.ActualTag())
+				fmt.Println(err.Kind())
+				fmt.Println(err.Type())
+				fmt.Println(err.Value())
+				fmt.Println(err.Param())
+			}
 		}
 		errRes.ErrMsg = strings.TrimSuffix(errRes.ErrMsg, ",")
 		base.Data["json"] = errRes

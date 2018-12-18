@@ -1,7 +1,6 @@
 package support
 
 import (
-	"errors"
 	"github.com/astaxie/beego"
 	"github.com/go-redis/redis"
 	"sync"
@@ -25,9 +24,9 @@ func InitRedisClient() error {
 		PoolSize:     5,
 	})
 
-	poolStats := redisClient.PoolStats()
-	if 0 == poolStats.IdleConns {
-		return errors.New("pool IdleConns is zero")
+	_, err := redisClient.Ping().Result()
+	if nil != err {
+		return err
 	}
 	return nil
 }

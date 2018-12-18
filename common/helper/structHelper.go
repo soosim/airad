@@ -6,7 +6,7 @@ import (
 )
 
 // dst should be a pointer to struct, src should be a struct
-func Copy(dst interface{}, src interface{}) (err error) {
+func CopyStructFromAnother(dst interface{}, src interface{}) (err error) {
 	dstValue := reflect.ValueOf(dst)
 	if dstValue.Kind() != reflect.Ptr {
 		err = errors.New("dst isn't a pointer to struct")

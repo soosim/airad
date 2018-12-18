@@ -60,7 +60,7 @@ func ListSentence(vo *vo.ListSentenceVO) ([]*Sentence, int64, error) {
 
 func GetOneByRand() (sentence Sentence, err error) {
 	err = getDBConn().Order("rand()").First(&sentence).Error
-	logs.Info(sentence)
+	logs.Debug(sentence)
 	return
 }
 
@@ -69,5 +69,10 @@ func Create(sentence Sentence) (Sentence, error) {
 	sentence.Time = time.Now().UTC().Unix()
 	db.NewRecord(sentence)
 	err := db.Create(&sentence).Error
+	return sentence, err
+}
+
+func Update(sentence Sentence) (Sentence, error) {
+	err := getDBConn().Save(&sentence).Error
 	return sentence, err
 }

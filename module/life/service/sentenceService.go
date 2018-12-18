@@ -35,7 +35,7 @@ func (s *sentenceService) GetOneByRand() (model.Sentence, error) {
 
 func (s *sentenceService) Create(vo *vo.SaveSentenceVO) (model.Sentence, error) {
 	sentence := &model.Sentence{}
-	if err := helper.Copy(sentence, *vo); err != nil {
+	if err := helper.CopyStructFromAnother(sentence, *vo); err != nil {
 		logs.Error("copy from vo to sentence error")
 		logs.Error(err)
 		return model.Sentence{}, err
@@ -46,4 +46,18 @@ func (s *sentenceService) Create(vo *vo.SaveSentenceVO) (model.Sentence, error) 
 	}
 	logs.Error("保存失败")
 	return model.Sentence{}, err
+}
+
+func (s *sentenceService) Update(vo *vo.SaveSentenceVO) (model.Sentence, error) {
+	sentence := &model.Sentence{}
+	if err := helper.CopyStructFromAnother(sentence, *vo); err != nil {
+		logs.Error("copy from vo to sentence error", err)
+		return model.Sentence{}, err
+	}
+	sentenceModel, err := model.Update(*sentence)
+	if err != nil {
+		logs.Error("更新失败", err)
+		return *sentence, err
+	}
+	return sentenceModel, nil
 }
