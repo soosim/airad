@@ -3,11 +3,12 @@ package controller
 import (
 	"airad/common/base"
 	"airad/common/support"
-	"airad/module/life/model"
+	"airad/module/life/common"
 	"airad/module/life/service"
 	sentenceVo "airad/module/life/vo"
 	"encoding/json"
 	"github.com/astaxie/beego/logs"
+	"strconv"
 )
 
 type SentenceController struct {
@@ -16,7 +17,9 @@ type SentenceController struct {
 
 // @Title ListSentence
 // @Description get all Sentence
+// @Param	body		body 	vo.ListSentenceVO	true		"body for list vo"
 // @Success 200 {object} base.BaseListResponseVO
+// @Failure 400 {object} base.BaseResponse
 // @router /list [post]
 func (c *SentenceController) ListSentence() {
 	logs.Info("接收到的数据为:" + string(c.Ctx.Input.RequestBody))
@@ -40,7 +43,8 @@ func (c *SentenceController) ListSentence() {
 
 // @Title GetOneByRand
 // @Description get one Sentence by rand
-// @Success 200 {object} models.Sentence
+// @Success 200 {object} model.Sentence
+// @Failure 400 {object} base.BaseResponse
 // @router /getOneByRand [get]
 func (c *SentenceController) GetOneByRand() {
 	sentence, err := service.NewSentenceService().GetOneByRand()
@@ -52,15 +56,11 @@ func (c *SentenceController) GetOneByRand() {
 	}
 
 	jsonRes, err := json.Marshal(sentence)
-	logs.Debug(sentence.Id, jsonRes)
-	aaa := &model.Sentence{}
-	json.Unmarshal(jsonRes, aaa)
-	logs.Debug(aaa)
 	if nil != err {
 		logs.Error(err)
 		return
 	}
-	_, err = support.GetRedisClient().Set(string(sentence.Id), jsonRes, 0).Result()
+	err = support.GetRedisClient().Set(common.LifeCachePrefix+strconv.Itoa(sentence.Id), jsonRes, 0).Err()
 	if err != nil {
 		logs.Error(err)
 	}
@@ -69,7 +69,9 @@ func (c *SentenceController) GetOneByRand() {
 
 // @Title Create
 // @Description create sentence
-// @Success 200 {object} models.Sentence
+// @Param	body		body 	vo.SaveSentenceVO	true		"body for update sentence data"
+// @Success 200 {object} model.Sentence
+// @Failure 400 {object} base.BaseResponse
 // @router /create [post]
 func (c *SentenceController) Create() {
 	logs.Info("接收到的数据为:" + string(c.Ctx.Input.RequestBody))
@@ -91,7 +93,9 @@ func (c *SentenceController) Create() {
 
 // @Title Update
 // @Description update sentence
-// @Success 200 {object} models.Sentence
+// @Param	body		body 	vo.SaveSentenceVO	true		"body for update sentence data"
+// @Success 200 {object} model.Sentence
+// @Failure 400 {object} base.BaseResponse
 // @router /update [post]
 func (c *SentenceController) UpdateById() {
 	logs.Info("接收到的数据为:", string(c.Ctx.Input.RequestBody))

@@ -31,6 +31,7 @@ sessioncookielifetime = 31536000
 
 [cache]
 cache = redis
+redis.separate = ":"
 redis.host = "127.0.0.1:6379"
 redis.password = ""
 redis.expire = 6000

@@ -7,3 +7,5 @@ lastupdate.tmp
 public/logs/*
 public/tmp/*
 app.conf
+swagger/swagger.json
+swagger/swagger.yml
