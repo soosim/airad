@@ -31,9 +31,16 @@ sessioncookielifetime = 31536000
 
 [cache]
 cache = redis
-redis.separate = ":"
-redis.host = "127.0.0.1:6379"
-redis.password = ""
-redis.expire = 6000
+redis.separate = :
+redis.host = 127.0.0.1:6379
+redis.password =
+cache.expire = 6000
+
+[rabbitmq]
+rmq.default.host = 127.0.0.1
+rmq.default.port = 5672
+rmq.default.username = dev
+rmq.default.password = dev
+rmq.default.vhost = /
 
 token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

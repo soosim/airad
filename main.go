@@ -17,6 +17,7 @@ func main() {
 	// utils.InitTemplate()
 	initializ.InitCache()
 	initializ.InitBootStrap()
+	initializ.InitRabbitMQ()
 	beego.ErrorController(&common.ErrorController{})
 
 	beego.Run()
