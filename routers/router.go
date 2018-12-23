@@ -27,6 +27,7 @@ func init() {
 		beego.NSNamespace("/life",
 			beego.NSInclude(
 				&lifeController.SentenceController{},
+				&lifeController.TestController{},
 			),
 		),
 		beego.NSNamespace("/airad",
